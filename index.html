@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Дзен-Хаб для фокуса</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,107 +16,71 @@
     </div>
     
     <div id="app">
-        <!-- Заголовок -->
-        <header id="header">
-            <h1>🧘 Дзен-Хаб</h1>
-            <p class="subtitle">Фокус та спокій</p>
-        </header>
-        
-        <!-- Таймер Помодоро -->
-        <main id="main">
-            <div class="timer-section">
-                <div class="timer-ring">
-                    <svg class="timer-svg">
-                        <circle class="timer-bg" cx="150" cy="150" r="140"></circle>
-                        <circle class="timer-progress" cx="150" cy="150" r="140"></circle>
-                    </svg>
-                    <div class="timer-display">
-                        <div class="timer-time" id="timer-time">25:00</div>
-                        <div class="timer-label" id="timer-label">Фокус</div>
+        <!-- 4 колонки звуків (на весь екран) -->
+        <div class="sounds-columns">
+            <div class="sound-column" data-sound="rain">
+                <div class="sound-content">
+                    <div class="sound-icon">🌧️</div>
+                    <div class="sound-name">Дощ</div>
+                    <div class="volume-slider">
+                        <input type="range" min="0" max="100" value="50" class="slider">
                     </div>
-                </div>
-                
-                <div class="timer-controls">
-                    <button class="timer-btn" id="btn-start">
-                        <span class="btn-icon">▶</span>
-                        <span class="btn-text">Старт</span>
-                    </button>
-                    <button class="timer-btn secondary" id="btn-pause">
-                        <span class="btn-icon">⏸</span>
-                        <span class="btn-text">Пауза</span>
-                    </button>
-                    <button class="timer-btn secondary" id="btn-reset">
-                        <span class="btn-icon">↻</span>
-                        <span class="btn-text">Скинути</span>
-                    </button>
-                </div>
-                
-                <div class="timer-presets">
-                    <button class="preset-btn active" data-minutes="25">25 хв</button>
-                    <button class="preset-btn" data-minutes="15">15 хв</button>
-                    <button class="preset-btn" data-minutes="5">5 хв</button>
                 </div>
             </div>
             
-            <!-- Мікшер звуків -->
-            <div class="mixer-section">
-                <h2 class="section-title">🎵 Звукові тони</h2>
-                
-                <div class="sounds-grid">
-                    <div class="sound-card" data-sound="rain">
-                        <div class="sound-icon">🌧️</div>
-                        <div class="sound-name">Дощ</div>
-                        <div class="sound-toggle">
-                            <div class="toggle-track">
-                                <div class="toggle-thumb"></div>
-                            </div>
-                        </div>
-                        <div class="volume-slider">
-                            <input type="range" min="0" max="100" value="50" class="slider">
-                        </div>
-                    </div>
-                    
-                    <div class="sound-card" data-sound="fire">
-                        <div class="sound-icon">🔥</div>
-                        <div class="sound-name">Вогонь</div>
-                        <div class="sound-toggle">
-                            <div class="toggle-track">
-                                <div class="toggle-thumb"></div>
-                            </div>
-                        </div>
-                        <div class="volume-slider">
-                            <input type="range" min="0" max="100" value="50" class="slider">
-                        </div>
-                    </div>
-                    
-                    <div class="sound-card" data-sound="cat">
-                        <div class="sound-icon">🐱</div>
-                        <div class="sound-name">Кіт</div>
-                        <div class="sound-toggle">
-                            <div class="toggle-track">
-                                <div class="toggle-thumb"></div>
-                            </div>
-                        </div>
-                        <div class="volume-slider">
-                            <input type="range" min="0" max="100" value="50" class="slider">
-                        </div>
-                    </div>
-                    
-                    <div class="sound-card" data-sound="whitenoise">
-                        <div class="sound-icon">☁️</div>
-                        <div class="sound-name">Білий шум</div>
-                        <div class="sound-toggle">
-                            <div class="toggle-track">
-                                <div class="toggle-thumb"></div>
-                            </div>
-                        </div>
-                        <div class="volume-slider">
-                            <input type="range" min="0" max="100" value="50" class="slider">
-                        </div>
+            <div class="sound-column" data-sound="fire">
+                <div class="sound-content">
+                    <div class="sound-icon">🔥</div>
+                    <div class="sound-name">Вогонь</div>
+                    <div class="volume-slider">
+                        <input type="range" min="0" max="100" value="50" class="slider">
                     </div>
                 </div>
             </div>
-        </main>
+            
+            <div class="sound-column" data-sound="cat">
+                <div class="sound-content">
+                    <div class="sound-icon">🐱</div>
+                    <div class="sound-name">Кіт</div>
+                    <div class="volume-slider">
+                        <input type="range" min="0" max="100" value="50" class="slider">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sound-column" data-sound="whitenoise">
+                <div class="sound-content">
+                    <div class="sound-icon">☁️</div>
+                    <div class="sound-name">Білий шум</div>
+                    <div class="volume-slider">
+                        <input type="range" min="0" max="100" value="50" class="slider">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Таймер поверх колонок -->
+        <div class="timer-overlay">
+            <div class="timer-square">
+                <div class="timer-time" id="timer-time">25:00</div>
+                <div class="timer-label" id="timer-label">ФОКУС</div>
+            </div>
+        </div>
+        
+        <!-- Контроли знизу -->
+        <div class="controls-bottom">
+            <div class="timer-presets">
+                <button class="preset-btn" data-minutes="5">5</button>
+                <button class="preset-btn active" data-minutes="15">15</button>
+                <button class="preset-btn" data-minutes="25">25</button>
+            </div>
+            
+            <div class="timer-controls">
+                <button class="control-btn start" id="btn-start">▶ Старт</button>
+                <button class="control-btn pause" id="btn-pause">⏸ Пауза</button>
+                <button class="control-btn reset" id="btn-reset">↻ Скинути</button>
+            </div>
+        </div>
     </div>
     
     <script src="sounds.js"></script>
