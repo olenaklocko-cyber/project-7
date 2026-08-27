@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Nunito', sans-serif;
-    background: linear-gradient(180deg, #b8e6e8 0%, #8fd4d6 50%, #6bc4c8 100%);
+    background: linear-gradient(180deg, #d4e8e5 0%, #b8d4d0 50%, #a0c4be 100%);
     min-height: 100vh;
     overflow: hidden;
     color: white;
@@ -119,75 +119,78 @@ body {
     flex-direction: column;
 }
 
-/* ===== 4 КОЛОНКИ ЗВУКІВ ===== */
+/* ===== 4 КВАДРАТИ ЗВУКІВ ===== */
 .sounds-columns {
     flex: 1;
-    display: flex;
-    gap: 4px;
-    padding: 4px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 8px;
+    padding: 8px;
 }
 
 .sound-column {
-    flex: 1;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.4s ease;
     backdrop-filter: blur(5px);
+    border: 2px solid rgba(255, 255, 255, 0.15);
 }
 
 .sound-column:hover {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.28);
 }
 
 .sound-column.active {
     background: rgba(255, 255, 255, 0.35);
-    box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
 }
 
 .sound-content {
     text-align: center;
-    padding: 20px 10px;
+    padding: 15px;
 }
 
 .sound-icon {
-    font-size: 48px;
-    margin-bottom: 10px;
+    font-size: 52px;
+    margin-bottom: 8px;
     transition: transform 0.3s ease;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
 .sound-column.active .sound-icon {
-    animation: iconPulse 1.5s ease-in-out infinite;
+    animation: iconPulse 2s ease-in-out infinite;
 }
 
 @keyframes iconPulse {
     0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.15); }
+    50% { transform: scale(1.1); }
 }
 
 .sound-name {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
-    color: white;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    margin-bottom: 15px;
+    color: #2d5a5a;
+    margin-bottom: 12px;
 }
 
 /* Слайдер вертикальний */
 .volume-slider {
     transform: rotate(-90deg);
-    width: 100px;
+    width: 90px;
 }
 
 .slider {
     width: 100%;
-    height: 6px;
+    height: 5px;
     -webkit-appearance: none;
     appearance: none;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(45, 90, 90, 0.2);
     border-radius: 3px;
     outline: none;
 }
@@ -195,60 +198,88 @@ body {
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 18px;
-    height: 18px;
-    background: white;
+    width: 16px;
+    height: 16px;
+    background: #2d5a5a;
     border-radius: 50%;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .slider::-moz-range-thumb {
-    width: 18px;
-    height: 18px;
-    background: white;
+    width: 16px;
+    height: 16px;
+    background: #2d5a5a;
     border-radius: 50%;
     cursor: pointer;
     border: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 /* ===== ТАЙМЕР ПОВЕРХ ===== */
 .timer-overlay {
     position: absolute;
-    top: 50%;
+    top: 42%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 10;
 }
 
 .timer-square {
-    background: rgba(0, 0, 0, 0.7);
-    border-radius: 24px;
-    padding: 40px 60px;
+    background: rgba(0, 0, 0, 0.65);
+    border-radius: 30px;
+    padding: 50px 70px;
     text-align: center;
-    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(20px);
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 10px 50px rgba(0, 0, 0, 0.25),
+        inset 0 0 40px rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(25px);
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+/* М'яке свічення по краях таймера */
+.timer-square::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    right: -50%;
+    bottom: -50%;
+    background: radial-gradient(circle at center, rgba(0, 210, 180, 0.06) 0%, transparent 50%);
+    animation: breathe 4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes breathe {
+    0%, 100% { transform: scale(0.9); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 1; }
 }
 
 .timer-time {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 80px;
+    font-size: 96px;
     font-weight: 400;
-    color: #00ffcc;
-    text-shadow: 0 0 30px rgba(0, 255, 204, 0.5);
+    color: #00d4b4;
+    text-shadow: 
+        0 0 20px rgba(0, 212, 180, 0.4),
+        0 0 60px rgba(0, 212, 180, 0.15);
     line-height: 1;
-    letter-spacing: 4px;
+    letter-spacing: 6px;
+    position: relative;
+    z-index: 1;
 }
 
 .timer-label {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.6);
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.45);
     font-weight: 700;
-    letter-spacing: 3px;
-    margin-top: 15px;
+    letter-spacing: 4px;
+    margin-top: 18px;
     text-transform: uppercase;
+    position: relative;
+    z-index: 1;
 }
 
 /* ===== КОНТРОЛИ ЗНИЗУ ===== */
@@ -257,24 +288,24 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
+    gap: 14px;
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(12px);
 }
 
 .timer-presets {
     display: flex;
-    gap: 10px;
+    gap: 12px;
 }
 
 .preset-btn {
-    width: 50px;
-    height: 50px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 12px;
-    background: transparent;
-    color: white;
-    font-size: 18px;
+    width: 52px;
+    height: 52px;
+    border: 2px solid rgba(45, 90, 90, 0.25);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #2d5a5a;
+    font-size: 17px;
     font-weight: 800;
     font-family: 'Nunito', sans-serif;
     cursor: pointer;
@@ -282,15 +313,15 @@ body {
 }
 
 .preset-btn:hover {
-    border-color: rgba(255, 255, 255, 0.6);
-    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(45, 90, 90, 0.4);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .preset-btn.active {
-    background: linear-gradient(135deg, #00ffcc, #00ccaa);
+    background: linear-gradient(135deg, #00d4b4, #00b89c);
     border-color: transparent;
     color: #003333;
-    box-shadow: 0 4px 15px rgba(0, 255, 204, 0.4);
+    box-shadow: 0 4px 18px rgba(0, 212, 180, 0.35);
 }
 
 .timer-controls {
@@ -299,9 +330,9 @@ body {
 }
 
 .control-btn {
-    padding: 14px 24px;
+    padding: 14px 26px;
     border: none;
-    border-radius: 12px;
+    border-radius: 14px;
     font-size: 14px;
     font-weight: 700;
     font-family: 'Nunito', sans-serif;
@@ -310,52 +341,52 @@ body {
 }
 
 .control-btn.start {
-    background: linear-gradient(135deg, #00ffcc, #00ccaa);
+    background: linear-gradient(135deg, #00d4b4, #00b89c);
     color: #003333;
-    box-shadow: 0 4px 15px rgba(0, 255, 204, 0.4);
+    box-shadow: 0 4px 18px rgba(0, 212, 180, 0.35);
 }
 
 .control-btn.start:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 255, 204, 0.5);
+    box-shadow: 0 6px 22px rgba(0, 212, 180, 0.45);
 }
 
 .control-btn.pause {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
+    background: rgba(255, 255, 255, 0.18);
+    color: #2d5a5a;
     display: none;
 }
 
 .control-btn.pause:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.28);
 }
 
 .control-btn.reset {
     background: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(45, 90, 90, 0.7);
 }
 
 .control-btn.reset:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.18);
 }
 
 /* ===== MOBILE ===== */
 @media (max-width: 500px) {
     .sounds-columns {
-        gap: 3px;
-        padding: 3px;
+        gap: 6px;
+        padding: 6px;
     }
     
     .sound-column {
-        border-radius: 12px;
+        border-radius: 16px;
     }
     
     .sound-icon {
-        font-size: 36px;
+        font-size: 40px;
     }
     
     .sound-name {
-        font-size: 11px;
+        font-size: 12px;
     }
     
     .volume-slider {
@@ -363,15 +394,16 @@ body {
     }
     
     .timer-square {
-        padding: 30px 40px;
+        padding: 35px 50px;
+        border-radius: 24px;
     }
     
     .timer-time {
-        font-size: 56px;
+        font-size: 64px;
     }
     
     .controls-bottom {
-        padding: 15px;
+        padding: 16px;
     }
     
     .control-btn {
