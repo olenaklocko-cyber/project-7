@@ -111,24 +111,38 @@ var Timer = {
         this.updateProgress();
     },
     
-    // Звуковий сигнал
+    // Звуковий сигнал — мелодія завершення
     playNotificationSound: function() {
         if (!Sounds.context) return;
         
-        var osc = Sounds.context.createOscillator();
-        var gain = Sounds.context.createGain();
+        var now = Sounds.context.currentTime;
         
-        osc.type = 'sine';
-        osc.frequency.value = 800;
+        // М'яка мелодія з 4 нот
+        var notes = [523, 659, 784, 1047];
+        var durations = [0.3, 0.3, 0.3, 0.6];
         
-        gain.gain.setValueAtTime(0.3, Sounds.context.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, Sounds.context.currentTime + 0.5);
+        var time = now;
+        var self = this;
         
-        osc.connect(gain);
-        gain.connect(Sounds.context.destination);
-        
-        osc.start();
-        osc.stop(Sounds.context.currentTime + 0.5);
+        notes.forEach(function(freq, i) {
+            var osc = Sounds.context.createOscillator();
+            var gain = Sounds.context.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            
+            gain.gain.setValueAtTime(0, time);
+            gain.gain.linearRampToValueAtTime(0.3, time + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.01, time + durations[i]);
+            
+            osc.connect(gain);
+            gain.connect(Sounds.context.destination);
+            
+            osc.start(time);
+            osc.stop(time + durations[i]);
+            
+            time += durations[i] * 0.8;
+        });
     },
     
     // Встановлення тривалості
