@@ -85,11 +85,22 @@ var Sounds = {
         var self = this;
         var audio = new Audio('sounds/fire.mp3');
         audio.loop = true;
-        audio.volume = 1.0;
+        
+        // Підсилюємо через Web Audio API (в 2 рази)
+        if (!this.context) this.init();
+        
+        var source = this.context.createMediaElementSource(audio);
+        var gainNode = this.context.createGain();
+        gainNode.gain.value = 2.0;
+        
+        source.connect(gainNode);
+        gainNode.connect(this.context.destination);
         
         audio.play().then(function() {
             self.sounds.fire = {
-                audio: audio
+                audio: audio,
+                gain: gainNode,
+                source: source
             };
         }).catch(function(e) {
             console.log('Помилка відтворення вогню:', e);
@@ -213,12 +224,12 @@ var Sounds = {
         
         var volume = value / 100;
         
-        if (this.sounds[name].audio) {
-            this.sounds[name].audio.volume = volume;
-        }
-        
         if (this.sounds[name].gain) {
-            this.sounds[name].gain.gain.setTargetAtTime(volume, this.context.currentTime, 0.1);
+            // Для вогню — підсилюємо в 2 рази
+            var multiplier = (name === 'fire') ? 2.0 : 1.0;
+            this.sounds[name].gain.gain.setTargetAtTime(volume * multiplier, this.context.currentTime, 0.1);
+        } else if (this.sounds[name].audio) {
+            this.sounds[name].audio.volume = volume;
         }
     },
     
