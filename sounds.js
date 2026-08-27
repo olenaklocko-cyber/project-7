@@ -78,7 +78,7 @@ var Sounds = {
         };
     },
     
-    // Запуск звуку вогню (тріск дров)
+    // Запуск звуку вогню (реалістичний тріск)
     playFire: function() {
         if (this.sounds.fire) return;
         
@@ -90,31 +90,46 @@ var Sounds = {
         // Низький гул полум'я
         var lowpass = this.context.createBiquadFilter();
         lowpass.type = 'lowpass';
-        lowpass.frequency.value = 300;
-        lowpass.Q.value = 0.8;
+        lowpass.frequency.value = 250;
+        lowpass.Q.value = 0.7;
         
-        // Тріск — різкі клацання
-        var crackle = this.context.createBiquadFilter();
-        crackle.type = 'bandpass';
-        crackle.frequency.value = 1200;
-        crackle.Q.value = 2;
+        // Тріск дров — широкий діапазон
+        var crackle1 = this.context.createBiquadFilter();
+        crackle1.type = 'bandpass';
+        crackle1.frequency.value = 800;
+        crackle1.Q.value = 1.5;
         
-        // Модуляція тріску — нерівномірний
-        var lfo = this.context.createOscillator();
-        var lfoGain = this.context.createGain();
-        lfo.frequency.value = 7;
-        lfoGain.gain.value = 500;
-        lfo.connect(lfoGain);
-        lfoGain.connect(crackle.frequency);
-        lfo.start(0);
+        var crackle2 = this.context.createBiquadFilter();
+        crackle2.type = 'bandpass';
+        crackle2.frequency.value = 2000;
+        crackle2.Q.value = 2;
         
-        // Підсилення — м'яке
+        // Модуляція тріску — повільна
+        var lfo1 = this.context.createOscillator();
+        var lfo1Gain = this.context.createGain();
+        lfo1.frequency.value = 0.5;
+        lfo1Gain.gain.value = 400;
+        lfo1.connect(lfo1Gain);
+        lfo1Gain.connect(crackle1.frequency);
+        lfo1.start(0);
+        
+        // Друга модуляція — швидша для тріску
+        var lfo2 = this.context.createOscillator();
+        var lfo2Gain = this.context.createGain();
+        lfo2.frequency.value = 3;
+        lfo2Gain.gain.value = 800;
+        lfo2.connect(lfo2Gain);
+        lfo2Gain.connect(crackle2.frequency);
+        lfo2.start(0);
+        
+        // Підсилення
         var gainNode = this.context.createGain();
-        gainNode.gain.value = 0.2;
+        gainNode.gain.value = 0.25;
         
         source.connect(lowpass);
-        lowpass.connect(crackle);
-        crackle.connect(gainNode);
+        lowpass.connect(crackle1);
+        crackle1.connect(crackle2);
+        crackle2.connect(gainNode);
         gainNode.connect(this.context.destination);
         
         source.start(0);
@@ -122,8 +137,8 @@ var Sounds = {
         this.sounds.fire = {
             source: source,
             gain: gainNode,
-            lfo: lfo,
-            filters: [lowpass, crackle]
+            lfo: [lfo1, lfo2],
+            filters: [lowpass, crackle1, crackle2]
         };
     },
     
@@ -216,7 +231,11 @@ var Sounds = {
         }
         
         if (sound.lfo) {
-            sound.lfo.stop();
+            if (Array.isArray(sound.lfo)) {
+                sound.lfo.forEach(function(l) { l.stop(); });
+            } else {
+                sound.lfo.stop();
+            }
         }
         
         delete this.sounds[name];
