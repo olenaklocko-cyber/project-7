@@ -78,68 +78,22 @@ var Sounds = {
         };
     },
     
-    // Запуск звуку вогню (реалістичний тріск)
+    // Запуск звуку вогню (реальний MP3)
     playFire: function() {
         if (this.sounds.fire) return;
         
-        var noiseBuffer = this.createWhiteNoiseBuffer();
-        var source = this.context.createBufferSource();
-        source.buffer = noiseBuffer;
-        source.loop = true;
+        var self = this;
+        var audio = new Audio('sounds/fire.mp3');
+        audio.loop = true;
+        audio.volume = 0.5;
         
-        // Низький гул полум'я
-        var lowpass = this.context.createBiquadFilter();
-        lowpass.type = 'lowpass';
-        lowpass.frequency.value = 250;
-        lowpass.Q.value = 0.7;
-        
-        // Тріск дров — широкий діапазон
-        var crackle1 = this.context.createBiquadFilter();
-        crackle1.type = 'bandpass';
-        crackle1.frequency.value = 800;
-        crackle1.Q.value = 1.5;
-        
-        var crackle2 = this.context.createBiquadFilter();
-        crackle2.type = 'bandpass';
-        crackle2.frequency.value = 2000;
-        crackle2.Q.value = 2;
-        
-        // Модуляція тріску — повільна
-        var lfo1 = this.context.createOscillator();
-        var lfo1Gain = this.context.createGain();
-        lfo1.frequency.value = 0.5;
-        lfo1Gain.gain.value = 400;
-        lfo1.connect(lfo1Gain);
-        lfo1Gain.connect(crackle1.frequency);
-        lfo1.start(0);
-        
-        // Друга модуляція — швидша для тріску
-        var lfo2 = this.context.createOscillator();
-        var lfo2Gain = this.context.createGain();
-        lfo2.frequency.value = 3;
-        lfo2Gain.gain.value = 800;
-        lfo2.connect(lfo2Gain);
-        lfo2Gain.connect(crackle2.frequency);
-        lfo2.start(0);
-        
-        // Підсилення
-        var gainNode = this.context.createGain();
-        gainNode.gain.value = 0.25;
-        
-        source.connect(lowpass);
-        lowpass.connect(crackle1);
-        crackle1.connect(crackle2);
-        crackle2.connect(gainNode);
-        gainNode.connect(this.context.destination);
-        
-        source.start(0);
-        
-        this.sounds.fire = {
-            source: source,
-            gain: gainNode,
-            lfo: [lfo1, lfo2],
-            filters: [lowpass, crackle1, crackle2]
-        };
+        audio.play().then(function() {
+            self.sounds.fire = {
+                audio: audio
+            };
+        }).catch(function(e) {
+            console.log('Помилка відтворення вогню:', e);
+        });
     },
     
     // Запуск звуку кота (мурчання)
@@ -220,6 +174,11 @@ var Sounds = {
         
         var sound = this.sounds[name];
         
+        if (sound.audio) {
+            sound.audio.pause();
+            sound.audio.currentTime = 0;
+        }
+        
         if (sound.source) {
             sound.source.stop();
         }
@@ -253,7 +212,14 @@ var Sounds = {
         if (!this.sounds[name]) return;
         
         var volume = value / 100;
-        this.sounds[name].gain.gain.setTargetAtTime(volume, this.context.currentTime, 0.1);
+        
+        if (this.sounds[name].audio) {
+            this.sounds[name].audio.volume = volume;
+        }
+        
+        if (this.sounds[name].gain) {
+            this.sounds[name].gain.gain.setTargetAtTime(volume, this.context.currentTime, 0.1);
+        }
     },
     
     // Перевірка чи грає звук
