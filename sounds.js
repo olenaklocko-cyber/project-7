@@ -85,7 +85,7 @@ var Sounds = {
         var self = this;
         var audio = new Audio('sounds/fire.mp3');
         audio.loop = true;
-        audio.volume = 0.5;
+        audio.volume = 0.9;
         
         audio.play().then(function() {
             self.sounds.fire = {
