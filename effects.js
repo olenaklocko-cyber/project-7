@@ -7,6 +7,7 @@ var Effects = {
     catWaves: [],
     isRainFullscreen: false,
     isFireFullscreen: false,
+    isCatFullscreen: false,
     
     // Ініціалізація
     init: function() {
@@ -18,6 +19,8 @@ var Effects = {
         this.fireFullscreen = document.getElementById('fire-fullscreen');
         this.fireSparksLayer = document.querySelector('.fire-sparks-layer');
         this.fireCloseBtn = document.querySelector('.fire-close');
+        this.catFullscreen = document.getElementById('cat-fullscreen');
+        this.catCloseBtn = document.querySelector('.cat-close');
         this.bindEvents();
     },
     
@@ -41,6 +44,15 @@ var Effects = {
         
         this.fireFullscreen.addEventListener('click', function() {
             self.closeFireFullscreen();
+        });
+        
+        this.catCloseBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            self.closeCatFullscreen();
+        });
+        
+        this.catFullscreen.addEventListener('click', function() {
+            self.closeCatFullscreen();
         });
     },
     
@@ -146,6 +158,19 @@ var Effects = {
         this.fireSparks = [];
     },
     
+    // ===== ПОВНОЕКРАННИЙ КІТ =====
+    openCatFullscreen: function() {
+        this.isCatFullscreen = true;
+        this.catFullscreen.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    },
+    
+    closeCatFullscreen: function() {
+        this.isCatFullscreen = false;
+        this.catFullscreen.classList.remove('active');
+        document.body.style.overflow = '';
+    },
+    
     // ===== ВОГОНЬ =====
     startFire: function() {
         if (this.fireParticles.length > 0) return;
@@ -232,8 +257,8 @@ var Effects = {
                 else this.closeFireFullscreen();
                 break;
             case 'cat':
-                if (active) this.startCat();
-                else this.stopCat();
+                if (active) this.openCatFullscreen();
+                else this.closeCatFullscreen();
                 break;
         }
     },
@@ -241,6 +266,6 @@ var Effects = {
     stopAll: function() {
         this.closeRainFullscreen();
         this.closeFireFullscreen();
-        this.stopCat();
+        this.closeCatFullscreen();
     }
 };

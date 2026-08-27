@@ -107,42 +107,51 @@ var Sounds = {
         });
     },
     
-    // Запуск звуку кота (мурчання)
+    // Запуск звуку кота (мурчання — підсилене)
     playCat: function() {
         if (this.sounds.cat) return;
+        
+        if (!this.context) this.init();
         
         // Основний тон мурчання
         var osc1 = this.context.createOscillator();
         osc1.type = 'sine';
-        osc1.frequency.value = 25;
+        osc1.frequency.value = 26;
         
         var osc2 = this.context.createOscillator();
         osc2.type = 'sine';
-        osc2.frequency.value = 50;
+        osc2.frequency.value = 52;
+        
+        // Третій тон для багатства
+        var osc3 = this.context.createOscillator();
+        osc3.type = 'triangle';
+        osc3.frequency.value = 39;
         
         // Модуляція амплітуди для пульсації
         var lfo = this.context.createOscillator();
         var lfoGain = this.context.createGain();
-        lfo.frequency.value = 4;
-        lfoGain.gain.value = 0.3;
+        lfo.frequency.value = 3.5;
+        lfoGain.gain.value = 0.4;
         lfo.connect(lfoGain);
         
-        // Підсилення
+        // Підсилювач — дуже голосно
         var gainNode = this.context.createGain();
-        gainNode.gain.value = 0.15;
+        gainNode.gain.value = 0.6;
         
         lfoGain.connect(gainNode.gain);
         
         osc1.connect(gainNode);
         osc2.connect(gainNode);
+        osc3.connect(gainNode);
         gainNode.connect(this.context.destination);
         
         osc1.start(0);
         osc2.start(0);
+        osc3.start(0);
         lfo.start(0);
         
         this.sounds.cat = {
-            oscillators: [osc1, osc2],
+            oscillators: [osc1, osc2, osc3],
             gain: gainNode,
             lfo: lfo
         };
