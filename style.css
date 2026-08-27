@@ -552,6 +552,23 @@ body {
     flex-direction: column;
 }
 
+/* ===== ЗАГОЛОВОК ===== */
+.app-header {
+    text-align: center;
+    padding: 12px 20px 8px;
+}
+
+.app-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: #2d5a5a;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 8px rgba(255, 255, 255, 0.5);
+    margin: 0;
+    font-style: italic;
+}
+
 /* ===== 4 КВАДРАТИ ЗВУКІВ ===== */
 .sounds-columns {
     flex: 1;
