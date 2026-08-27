@@ -8,6 +8,7 @@ var Effects = {
     isRainFullscreen: false,
     isFireFullscreen: false,
     isCatFullscreen: false,
+    isWhitenoiseFullscreen: false,
     
     // Ініціалізація
     init: function() {
@@ -21,6 +22,8 @@ var Effects = {
         this.fireCloseBtn = document.querySelector('.fire-close');
         this.catFullscreen = document.getElementById('cat-fullscreen');
         this.catCloseBtn = document.querySelector('.cat-close');
+        this.whitenoiseFullscreen = document.getElementById('whitenoise-fullscreen');
+        this.whitenoiseCloseBtn = document.querySelector('.whitenoise-close');
         this.bindEvents();
     },
     
@@ -53,6 +56,15 @@ var Effects = {
         
         this.catFullscreen.addEventListener('click', function() {
             self.closeCatFullscreen();
+        });
+        
+        this.whitenoiseCloseBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            self.closeWhitenoiseFullscreen();
+        });
+        
+        this.whitenoiseFullscreen.addEventListener('click', function() {
+            self.closeWhitenoiseFullscreen();
         });
     },
     
@@ -171,6 +183,19 @@ var Effects = {
         document.body.style.overflow = '';
     },
     
+    // ===== ПОВНОЕКРАННИЙ БІЛИЙ ШУМ =====
+    openWhitenoiseFullscreen: function() {
+        this.isWhitenoiseFullscreen = true;
+        this.whitenoiseFullscreen.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    },
+    
+    closeWhitenoiseFullscreen: function() {
+        this.isWhitenoiseFullscreen = false;
+        this.whitenoiseFullscreen.classList.remove('active');
+        document.body.style.overflow = '';
+    },
+    
     // ===== ВОГОНЬ =====
     startFire: function() {
         if (this.fireParticles.length > 0) return;
@@ -260,6 +285,10 @@ var Effects = {
                 if (active) this.openCatFullscreen();
                 else this.closeCatFullscreen();
                 break;
+            case 'whitenoise':
+                if (active) this.openWhitenoiseFullscreen();
+                else this.closeWhitenoiseFullscreen();
+                break;
         }
     },
     
@@ -267,5 +296,6 @@ var Effects = {
         this.closeRainFullscreen();
         this.closeFireFullscreen();
         this.closeCatFullscreen();
+        this.closeWhitenoiseFullscreen();
     }
 };

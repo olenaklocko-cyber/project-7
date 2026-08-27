@@ -353,6 +353,98 @@ body {
     transform: scale(1.1);
 }
 
+/* ===== КАРТОНКА БІЛОГО ШУМУ ===== */
+.sound-column[data-sound="whitenoise"] {
+    position: relative;
+    overflow: hidden;
+}
+
+.sound-column[data-sound="whitenoise"] .whitenoise-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('images/baby.jpg') center/cover;
+    opacity: 0.6;
+    transition: opacity 0.4s ease;
+    z-index: 0;
+}
+
+.sound-column[data-sound="whitenoise"]:hover .whitenoise-bg,
+.sound-column[data-sound="whitenoise"].active .whitenoise-bg {
+    opacity: 0.75;
+}
+
+.sound-column[data-sound="whitenoise"] .sound-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== ПОВНОЕКРАННИЙ БІЛИЙ ШУМ ===== */
+.whitenoise-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.6s ease;
+}
+
+.whitenoise-fullscreen.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.whitenoise-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('images/baby.jpg') center/cover;
+    animation: whitenoiseZoom 35s ease-in-out infinite alternate;
+}
+
+@keyframes whitenoiseZoom {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.04); }
+}
+
+.whitenoise-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(240, 240, 255, 0.2) 100%);
+}
+
+.whitenoise-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(200, 200, 255, 0.3);
+    color: #333;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 101;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.whitenoise-close:hover {
+    background: rgba(200, 200, 255, 0.5);
+    transform: scale(1.1);
+}
+
 /* ===== BACKGROUND EFFECTS ===== */
 #background-effects {
     position: fixed;

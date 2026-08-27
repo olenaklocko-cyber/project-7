@@ -136,7 +136,7 @@ var Sounds = {
         });
     },
     
-    // Запуск білого шуму
+    // Запуск білого шуму (ніжний)
     playWhiteNoise: function() {
         if (this.sounds.whitenoise) return;
         
@@ -145,17 +145,25 @@ var Sounds = {
         source.buffer = noiseBuffer;
         source.loop = true;
         
-        // Низькочастотний фільтр для м'якості
+        // М'який фільтр — ніжний звук
         var lowpass = this.context.createBiquadFilter();
         lowpass.type = 'lowpass';
-        lowpass.frequency.value = 3000;
+        lowpass.frequency.value = 2000;
+        lowpass.Q.value = 0.3;
         
-        // Підсилення
+        // Додатковий фільтр для м'якості
+        var highshelf = this.context.createBiquadFilter();
+        highshelf.type = 'highshelf';
+        highshelf.frequency.value = 3000;
+        highshelf.gain.value = -8;
+        
+        // Підсилення — тихе
         var gainNode = this.context.createGain();
-        gainNode.gain.value = 0.2;
+        gainNode.gain.value = 0.15;
         
         source.connect(lowpass);
-        lowpass.connect(gainNode);
+        lowpass.connect(highshelf);
+        highshelf.connect(gainNode);
         gainNode.connect(this.context.destination);
         
         source.start(0);
@@ -163,7 +171,7 @@ var Sounds = {
         this.sounds.whitenoise = {
             source: source,
             gain: gainNode,
-            filters: [lowpass]
+            filters: [lowpass, highshelf]
         };
     },
     
