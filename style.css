@@ -12,6 +12,34 @@ body {
     color: white;
 }
 
+/* ===== КАРТОНКА ДОЩУ ===== */
+.sound-column[data-sound="rain"] {
+    position: relative;
+    overflow: hidden;
+}
+
+.sound-column[data-sound="rain"] .rain-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=80') center/cover;
+    opacity: 0.5;
+    transition: opacity 0.4s ease;
+    z-index: 0;
+}
+
+.sound-column[data-sound="rain"]:hover .rain-bg,
+.sound-column[data-sound="rain"].active .rain-bg {
+    opacity: 0.7;
+}
+
+.sound-column[data-sound="rain"] .sound-content {
+    position: relative;
+    z-index: 1;
+}
+
 /* ===== ПОВНОЕКРАННИЙ ДОЩ ===== */
 .rain-fullscreen {
     position: fixed;
@@ -36,8 +64,8 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=1920&q=80') center/cover;
-    animation: rainZoom 20s ease-in-out infinite alternate;
+    background: url('https://images.unsplash.com/photo-1428592953211-077101b2021b?w=1920&q=80') center/cover;
+    animation: rainZoom 25s ease-in-out infinite alternate;
 }
 
 @keyframes rainZoom {
