@@ -630,8 +630,22 @@ body {
 
 /* Слайдер вертикальний */
 .volume-slider {
-    transform: rotate(-90deg);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
     width: 90px;
+}
+
+/* Правий бік — дощ, кіт */
+.sound-column[data-sound="rain"] .volume-slider,
+.sound-column[data-sound="cat"] .volume-slider {
+    right: -30px;
+}
+
+/* Лівий бік — вогонь, білий шум */
+.sound-column[data-sound="fire"] .volume-slider,
+.sound-column[data-sound="whitenoise"] .volume-slider {
+    left: -30px;
 }
 
 .slider {
