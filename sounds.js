@@ -120,7 +120,7 @@ var Sounds = {
         
         var source = this.context.createMediaElementSource(audio);
         var gainNode = this.context.createGain();
-        gainNode.gain.value = 2.0;
+        gainNode.gain.value = 1.2;
         
         source.connect(gainNode);
         gainNode.connect(this.context.destination);
@@ -213,8 +213,10 @@ var Sounds = {
         var volume = value / 100;
         
         if (this.sounds[name].gain) {
-            // Для кота та вогню — підсилюємо в 2 рази
-            var multiplier = (name === 'fire' || name === 'cat') ? 2.0 : 1.0;
+            // Різне підсилення для різних звуків
+            var multiplier = 1.0;
+            if (name === 'fire') multiplier = 2.0;
+            if (name === 'cat') multiplier = 1.2;
             this.sounds[name].gain.gain.setTargetAtTime(volume * multiplier, this.context.currentTime, 0.1);
         } else if (this.sounds[name].audio) {
             this.sounds[name].audio.volume = volume;
