@@ -107,91 +107,33 @@ var Sounds = {
         });
     },
     
-    // Запуск звуку кота (дуже реалістичне мурчання)
+    // Запуск звуку кота (реальний MP3)
     playCat: function() {
         if (this.sounds.cat) return;
         
+        var self = this;
+        var audio = new Audio('sounds/cat.mp3');
+        audio.loop = true;
+        
+        // Підсилюємо через Web Audio API
         if (!this.context) this.init();
         
-        // === ОСНОВНІ ТОНИ МУРЧАННЯ ===
-        
-        // Головний тон (26 Гц — типове мурчання)
-        var osc1 = this.context.createOscillator();
-        osc1.type = 'sine';
-        osc1.frequency.value = 26;
-        
-        // Обертон (52 Гц)
-        var osc2 = this.context.createOscillator();
-        osc2.type = 'sine';
-        osc2.frequency.value = 52;
-        
-        // Третій тон — текстура (39 Гц)
-        var osc3 = this.context.createOscillator();
-        osc3.type = 'triangle';
-        osc3.frequency.value = 39;
-        
-        // Четвертий — повітря (78 Гц)
-        var osc4 = this.context.createOscillator();
-        osc4.type = 'sine';
-        osc4.frequency.value = 78;
-        
-        // П'ятий — глибина (13 Гц — майже не чути, але відчувається)
-        var osc5 = this.context.createOscillator();
-        osc5.type = 'sine';
-        osc5.frequency.value = 13;
-        
-        // === МОДУЛЯЦІЯ ===
-        
-        // Швидка пульсація (як дихання кота)
-        var lfo1 = this.context.createOscillator();
-        var lfo1Gain = this.context.createGain();
-        lfo1.frequency.value = 2.8;
-        lfo1Gain.gain.value = 0.6;
-        lfo1.connect(lfo1Gain);
-        
-        // Повільна хвиля (настрій)
-        var lfo2 = this.context.createOscillator();
-        var lfo2Gain = this.context.createGain();
-        lfo2.frequency.value = 0.7;
-        lfo2Gain.gain.value = 0.3;
-        lfo2.connect(lfo2Gain);
-        
-        // Дуже повільна — для реалістичності
-        var lfo3 = this.context.createOscillator();
-        var lfo3Gain = this.context.createGain();
-        lfo3.frequency.value = 0.2;
-        lfo3Gain.gain.value = 0.15;
-        lfo3.connect(lfo3Gain);
-        
-        // === ПІДСИЛЕННЯ ===
+        var source = this.context.createMediaElementSource(audio);
         var gainNode = this.context.createGain();
-        gainNode.gain.value = 1.0;
+        gainNode.gain.value = 2.0;
         
-        lfo1Gain.connect(gainNode.gain);
-        lfo2Gain.connect(gainNode.gain);
-        lfo3Gain.connect(gainNode.gain);
-        
-        osc1.connect(gainNode);
-        osc2.connect(gainNode);
-        osc3.connect(gainNode);
-        osc4.connect(gainNode);
-        osc5.connect(gainNode);
+        source.connect(gainNode);
         gainNode.connect(this.context.destination);
         
-        osc1.start(0);
-        osc2.start(0);
-        osc3.start(0);
-        osc4.start(0);
-        osc5.start(0);
-        lfo1.start(0);
-        lfo2.start(0);
-        lfo3.start(0);
-        
-        this.sounds.cat = {
-            oscillators: [osc1, osc2, osc3, osc4, osc5],
-            gain: gainNode,
-            lfo: [lfo1, lfo2, lfo3]
-        };
+        audio.play().then(function() {
+            self.sounds.cat = {
+                audio: audio,
+                gain: gainNode,
+                source: source
+            };
+        }).catch(function(e) {
+            console.log('Помилка відтворення кота:', e);
+        });
     },
     
     // Запуск білого шуму
@@ -271,8 +213,8 @@ var Sounds = {
         var volume = value / 100;
         
         if (this.sounds[name].gain) {
-            // Для вогню — підсилюємо в 2 рази
-            var multiplier = (name === 'fire') ? 2.0 : 1.0;
+            // Для кота та вогню — підсилюємо в 2 рази
+            var multiplier = (name === 'fire' || name === 'cat') ? 2.0 : 1.0;
             this.sounds[name].gain.gain.setTargetAtTime(volume * multiplier, this.context.currentTime, 0.1);
         } else if (this.sounds[name].audio) {
             this.sounds[name].audio.volume = volume;
