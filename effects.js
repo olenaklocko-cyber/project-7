@@ -3,8 +3,10 @@
 var Effects = {
     rainDrops: [],
     fireParticles: [],
+    fireSparks: [],
     catWaves: [],
     isRainFullscreen: false,
+    isFireFullscreen: false,
     
     // Ініціалізація
     init: function() {
@@ -13,22 +15,32 @@ var Effects = {
         this.rainFullscreen = document.getElementById('rain-fullscreen');
         this.rainDropsLayer = document.querySelector('.rain-drops-layer');
         this.rainCloseBtn = document.querySelector('.rain-close');
-        this.bindRainEvents();
+        this.fireFullscreen = document.getElementById('fire-fullscreen');
+        this.fireSparksLayer = document.querySelector('.fire-sparks-layer');
+        this.fireCloseBtn = document.querySelector('.fire-close');
+        this.bindEvents();
     },
     
-    // Події для дощу
-    bindRainEvents: function() {
+    // Події
+    bindEvents: function() {
         var self = this;
         
-        // Закриття повноекранного дощу
         this.rainCloseBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             self.closeRainFullscreen();
         });
         
-        // Клік по фону закриває
         this.rainFullscreen.addEventListener('click', function() {
             self.closeRainFullscreen();
+        });
+        
+        this.fireCloseBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            self.closeFireFullscreen();
+        });
+        
+        this.fireFullscreen.addEventListener('click', function() {
+            self.closeFireFullscreen();
         });
     },
     
@@ -82,6 +94,56 @@ var Effects = {
             }
         });
         this.rainDrops = [];
+    },
+    
+    // ===== ПОВНОЕКРАННИЙ ВОГОНЬ =====
+    openFireFullscreen: function() {
+        this.isFireFullscreen = true;
+        this.fireFullscreen.classList.add('active');
+        this.createFireSparks();
+        document.body.style.overflow = 'hidden';
+    },
+    
+    closeFireFullscreen: function() {
+        this.isFireFullscreen = false;
+        this.fireFullscreen.classList.remove('active');
+        this.clearFireSparks();
+        document.body.style.overflow = '';
+    },
+    
+    createFireSparks: function() {
+        this.clearFireSparks();
+        
+        for (var i = 0; i < 40; i++) {
+            this.createSpark();
+        }
+    },
+    
+    createSpark: function() {
+        var spark = document.createElement('div');
+        spark.className = 'fire-spark';
+        
+        var x = 30 + Math.random() * 40;
+        var delay = Math.random() * 3;
+        var duration = 1.5 + Math.random() * 2;
+        var drift = (Math.random() - 0.5) * 100;
+        
+        spark.style.left = x + '%';
+        spark.style.animationDelay = delay + 's';
+        spark.style.animationDuration = duration + 's';
+        spark.style.setProperty('--drift', drift + 'px');
+        
+        this.fireSparksLayer.appendChild(spark);
+        this.fireSparks.push(spark);
+    },
+    
+    clearFireSparks: function() {
+        this.fireSparks.forEach(function(spark) {
+            if (spark.parentNode) {
+                spark.parentNode.removeChild(spark);
+            }
+        });
+        this.fireSparks = [];
     },
     
     // ===== ВОГОНЬ =====
@@ -166,8 +228,8 @@ var Effects = {
                 else this.closeRainFullscreen();
                 break;
             case 'fire':
-                if (active) this.startFire();
-                else this.stopFire();
+                if (active) this.openFireFullscreen();
+                else this.closeFireFullscreen();
                 break;
             case 'cat':
                 if (active) this.startCat();
@@ -178,7 +240,7 @@ var Effects = {
     
     stopAll: function() {
         this.closeRainFullscreen();
-        this.stopFire();
+        this.closeFireFullscreen();
         this.stopCat();
     }
 };

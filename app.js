@@ -34,13 +34,6 @@ var App = {
             
             column.addEventListener('click', function(e) {
                 if (e.target.classList.contains('slider')) return;
-                
-                // Для дощу — не закриваємо при кліку по картці
-                if (soundName === 'rain') {
-                    self.toggleSound('rain');
-                    return;
-                }
-                
                 self.toggleSound(soundName);
             });
             

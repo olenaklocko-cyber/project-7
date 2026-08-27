@@ -78,7 +78,7 @@ var Sounds = {
         };
     },
     
-    // Запуск звуку вогню
+    // Запуск звуку вогню (тріск дров)
     playFire: function() {
         if (this.sounds.fire) return;
         
@@ -87,26 +87,34 @@ var Sounds = {
         source.buffer = noiseBuffer;
         source.loop = true;
         
-        // Фільтр для тріску вогню
+        // Низький гул полум'я
         var lowpass = this.context.createBiquadFilter();
         lowpass.type = 'lowpass';
-        lowpass.frequency.value = 400;
+        lowpass.frequency.value = 300;
+        lowpass.Q.value = 0.8;
         
-        // Модуляція для тріску
+        // Тріск — різкі клацання
+        var crackle = this.context.createBiquadFilter();
+        crackle.type = 'bandpass';
+        crackle.frequency.value = 1200;
+        crackle.Q.value = 2;
+        
+        // Модуляція тріску — нерівномірний
         var lfo = this.context.createOscillator();
         var lfoGain = this.context.createGain();
-        lfo.frequency.value = 3;
-        lfoGain.gain.value = 200;
+        lfo.frequency.value = 7;
+        lfoGain.gain.value = 500;
         lfo.connect(lfoGain);
-        lfoGain.connect(lowpass.frequency);
+        lfoGain.connect(crackle.frequency);
         lfo.start(0);
         
-        // Підсилення
+        // Підсилення — м'яке
         var gainNode = this.context.createGain();
-        gainNode.gain.value = 0.4;
+        gainNode.gain.value = 0.2;
         
         source.connect(lowpass);
-        lowpass.connect(gainNode);
+        lowpass.connect(crackle);
+        crackle.connect(gainNode);
         gainNode.connect(this.context.destination);
         
         source.start(0);
@@ -115,7 +123,7 @@ var Sounds = {
             source: source,
             gain: gainNode,
             lfo: lfo,
-            filters: [lowpass]
+            filters: [lowpass, crackle]
         };
     },
     
