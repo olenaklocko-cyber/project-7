@@ -48,11 +48,11 @@ var Effects = {
         document.body.style.overflow = '';
     },
     
-    // Створити реальні краплі дощу
+    // Створити реальні краплі дощу (м'якші)
     createRealRainDrops: function() {
         this.clearRealRainDrops();
         
-        for (var i = 0; i < 150; i++) {
+        for (var i = 0; i < 60; i++) {
             this.createRealDrop();
         }
     },
@@ -62,9 +62,9 @@ var Effects = {
         drop.className = 'rain-drop-real';
         
         var x = Math.random() * 100;
-        var delay = Math.random() * 3;
-        var duration = 0.4 + Math.random() * 0.4;
-        var height = 15 + Math.random() * 25;
+        var delay = Math.random() * 4;
+        var duration = 0.8 + Math.random() * 0.6;
+        var height = 10 + Math.random() * 15;
         
         drop.style.left = x + '%';
         drop.style.height = height + 'px';

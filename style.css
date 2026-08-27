@@ -24,8 +24,8 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=80') center/cover;
-    opacity: 0.5;
+    background: url('https://images.unsplash.com/photo-1511374302500-1c490827a780?w=600&q=80') center/cover;
+    opacity: 0.55;
     transition: opacity 0.4s ease;
     z-index: 0;
 }
@@ -64,8 +64,8 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('https://images.unsplash.com/photo-1428592953211-077101b2021b?w=1920&q=80') center/cover;
-    animation: rainZoom 25s ease-in-out infinite alternate;
+    background: url('https://images.unsplash.com/photo-1511374302500-1c490827a780?w=1920&q=80') center/cover;
+    animation: rainZoom 30s ease-in-out infinite alternate;
 }
 
 @keyframes rainZoom {

@@ -22,7 +22,7 @@ var Sounds = {
         return buffer;
     },
     
-    // Запуск звуку дощу (реалістичний)
+    // Запуск звуку дощу (м'який літній дощ)
     playRain: function() {
         if (this.sounds.rain) return;
         
@@ -31,36 +31,36 @@ var Sounds = {
         source.buffer = noiseBuffer;
         source.loop = true;
         
-        // Низькочастотний гул
+        // М'який низький фільтр — тихий дощик
         var lowpass = this.context.createBiquadFilter();
         lowpass.type = 'lowpass';
-        lowpass.frequency.value = 800;
-        lowpass.Q.value = 0.7;
+        lowpass.frequency.value = 500;
+        lowpass.Q.value = 0.5;
         
-        // Середні частоти — капання
+        // Середні частоти — краплі на листя
         var bandpass = this.context.createBiquadFilter();
         bandpass.type = 'bandpass';
-        bandpass.frequency.value = 2500;
-        bandpass.Q.value = 0.4;
+        bandpass.frequency.value = 1800;
+        bandpass.Q.value = 0.3;
         
-        // Високі частоти — дрібний дощ
+        // Прибираємо високі — не шумить
         var highshelf = this.context.createBiquadFilter();
         highshelf.type = 'highshelf';
-        highshelf.frequency.value = 6000;
-        highshelf.gain.value = -6;
+        highshelf.frequency.value = 4000;
+        highshelf.gain.value = -12;
         
-        // Модуляція для нерівномірності
+        // Повільна модуляція — плавність
         var lfo = this.context.createOscillator();
         var lfoGain = this.context.createGain();
-        lfo.frequency.value = 0.3;
-        lfoGain.gain.value = 150;
+        lfo.frequency.value = 0.15;
+        lfoGain.gain.value = 80;
         lfo.connect(lfoGain);
         lfoGain.connect(lowpass.frequency);
         lfo.start(0);
         
-        // Підсилення
+        // Тихе підсилення
         var gainNode = this.context.createGain();
-        gainNode.gain.value = 0.35;
+        gainNode.gain.value = 0.18;
         
         source.connect(lowpass);
         lowpass.connect(bandpass);
