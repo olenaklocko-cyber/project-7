@@ -107,53 +107,70 @@ var Sounds = {
         });
     },
     
-    // Запуск звуку кота (мурчання — підсилене)
+    // Запуск звуку кота (реалістичне мурчання — дуже голосно)
     playCat: function() {
         if (this.sounds.cat) return;
         
         if (!this.context) this.init();
         
-        // Основний тон мурчання
+        // Основний тон мурчання (25 Гц)
         var osc1 = this.context.createOscillator();
         osc1.type = 'sine';
-        osc1.frequency.value = 26;
+        osc1.frequency.value = 25;
         
+        // Другий тон (50 Гц)
         var osc2 = this.context.createOscillator();
         osc2.type = 'sine';
-        osc2.frequency.value = 52;
+        osc2.frequency.value = 50;
         
-        // Третій тон для багатства
+        // Третій тон — багатство (37 Гц)
         var osc3 = this.context.createOscillator();
         osc3.type = 'triangle';
-        osc3.frequency.value = 39;
+        osc3.frequency.value = 37;
         
-        // Модуляція амплітуди для пульсації
-        var lfo = this.context.createOscillator();
-        var lfoGain = this.context.createGain();
-        lfo.frequency.value = 3.5;
-        lfoGain.gain.value = 0.4;
-        lfo.connect(lfoGain);
+        // Четвертий тон — текстура (75 Гц)
+        var osc4 = this.context.createOscillator();
+        osc4.type = 'sine';
+        osc4.frequency.value = 75;
+        
+        // Модуляція амплітуди для пульсації мурчання
+        var lfo1 = this.context.createOscillator();
+        var lfo1Gain = this.context.createGain();
+        lfo1.frequency.value = 3;
+        lfo1Gain.gain.value = 0.5;
+        lfo1.connect(lfo1Gain);
+        
+        // Друга модуляція — повільніша
+        var lfo2 = this.context.createOscillator();
+        var lfo2Gain = this.context.createGain();
+        lfo2.frequency.value = 0.8;
+        lfo2Gain.gain.value = 0.3;
+        lfo2.connect(lfo2Gain);
         
         // Підсилювач — дуже голосно
         var gainNode = this.context.createGain();
-        gainNode.gain.value = 0.6;
+        gainNode.gain.value = 0.8;
         
-        lfoGain.connect(gainNode.gain);
+        lfo1Gain.connect(gainNode.gain);
+        lfo2Gain.connect(gainNode.gain);
         
         osc1.connect(gainNode);
         osc2.connect(gainNode);
         osc3.connect(gainNode);
+        osc4.connect(gainNode);
         gainNode.connect(this.context.destination);
         
         osc1.start(0);
         osc2.start(0);
         osc3.start(0);
-        lfo.start(0);
+        osc4.start(0);
+        lfo1.start(0);
+        lfo2.start(0);
         
         this.sounds.cat = {
-            oscillators: [osc1, osc2, osc3],
+            oscillators: [osc1, osc2, osc3, osc4],
             gain: gainNode,
-            lfo: lfo
+            lfo: [lfo1, lfo2]
         };
     },
     
