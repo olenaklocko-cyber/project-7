@@ -22,7 +22,7 @@ var Sounds = {
         return buffer;
     },
     
-    // Запуск звуку дощу
+    // Запуск звуку дощу (реалістичний)
     playRain: function() {
         if (this.sounds.rain) return;
         
@@ -31,24 +31,41 @@ var Sounds = {
         source.buffer = noiseBuffer;
         source.loop = true;
         
-        // Фільтр для звуку дощу
+        // Низькочастотний гул
+        var lowpass = this.context.createBiquadFilter();
+        lowpass.type = 'lowpass';
+        lowpass.frequency.value = 800;
+        lowpass.Q.value = 0.7;
+        
+        // Середні частоти — капання
         var bandpass = this.context.createBiquadFilter();
         bandpass.type = 'bandpass';
-        bandpass.frequency.value = 1000;
-        bandpass.Q.value = 0.5;
+        bandpass.frequency.value = 2500;
+        bandpass.Q.value = 0.4;
         
-        // Додатковий високочастотний фільтр
-        var highpass = this.context.createBiquadFilter();
-        highpass.type = 'highpass';
-        highpass.frequency.value = 500;
+        // Високі частоти — дрібний дощ
+        var highshelf = this.context.createBiquadFilter();
+        highshelf.type = 'highshelf';
+        highshelf.frequency.value = 6000;
+        highshelf.gain.value = -6;
+        
+        // Модуляція для нерівномірності
+        var lfo = this.context.createOscillator();
+        var lfoGain = this.context.createGain();
+        lfo.frequency.value = 0.3;
+        lfoGain.gain.value = 150;
+        lfo.connect(lfoGain);
+        lfoGain.connect(lowpass.frequency);
+        lfo.start(0);
         
         // Підсилення
         var gainNode = this.context.createGain();
-        gainNode.gain.value = 0.3;
+        gainNode.gain.value = 0.35;
         
-        source.connect(bandpass);
-        bandpass.connect(highpass);
-        highpass.connect(gainNode);
+        source.connect(lowpass);
+        lowpass.connect(bandpass);
+        bandpass.connect(highshelf);
+        highshelf.connect(gainNode);
         gainNode.connect(this.context.destination);
         
         source.start(0);
@@ -56,7 +73,8 @@ var Sounds = {
         this.sounds.rain = {
             source: source,
             gain: gainNode,
-            filters: [bandpass, highpass]
+            lfo: lfo,
+            filters: [lowpass, bandpass, highshelf]
         };
     },
     

@@ -8,17 +8,24 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Повноекранний дощ -->
+    <div id="rain-fullscreen" class="rain-fullscreen">
+        <div class="rain-image"></div>
+        <div class="rain-overlay"></div>
+        <div class="rain-drops-layer"></div>
+        <button class="rain-close">✕</button>
+    </div>
+    
     <!-- Анімації фону -->
     <div id="background-effects">
-        <div id="rain-container" class="effect-container"></div>
         <div id="fire-container" class="effect-container"></div>
         <div id="cat-container" class="effect-container"></div>
     </div>
     
     <div id="app">
-        <!-- 4 колонки звуків (на весь екран) -->
+        <!-- 4 квадрати звуків -->
         <div class="sounds-columns">
-            <div class="sound-column" data-sound="rain">
+            <div class="sound-column" data-sound="rain" id="rain-card">
                 <div class="sound-content">
                     <div class="sound-icon">🌧️</div>
                     <div class="sound-name">Дощ</div>

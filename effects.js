@@ -4,52 +4,84 @@ var Effects = {
     rainDrops: [],
     fireParticles: [],
     catWaves: [],
+    isRainFullscreen: false,
     
     // Ініціалізація
     init: function() {
-        this.rainContainer = document.getElementById('rain-container');
         this.fireContainer = document.getElementById('fire-container');
         this.catContainer = document.getElementById('cat-container');
+        this.rainFullscreen = document.getElementById('rain-fullscreen');
+        this.rainDropsLayer = document.querySelector('.rain-drops-layer');
+        this.rainCloseBtn = document.querySelector('.rain-close');
+        this.bindRainEvents();
     },
     
-    // ===== ДОЩ =====
-    startRain: function() {
-        if (this.rainDrops.length > 0) return;
+    // Події для дощу
+    bindRainEvents: function() {
+        var self = this;
         
-        this.rainContainer.classList.add('active');
+        // Закриття повноекранного дощу
+        this.rainCloseBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            self.closeRainFullscreen();
+        });
         
-        // Створюємо краплі
-        for (var i = 0; i < 100; i++) {
-            this.createRaindrop();
+        // Клік по фону закриває
+        this.rainFullscreen.addEventListener('click', function() {
+            self.closeRainFullscreen();
+        });
+    },
+    
+    // Відкрити повноекранний дощ
+    openRainFullscreen: function() {
+        this.isRainFullscreen = true;
+        this.rainFullscreen.classList.add('active');
+        this.createRealRainDrops();
+        document.body.style.overflow = 'hidden';
+    },
+    
+    // Закрити повноекранний дощ
+    closeRainFullscreen: function() {
+        this.isRainFullscreen = false;
+        this.rainFullscreen.classList.remove('active');
+        this.clearRealRainDrops();
+        document.body.style.overflow = '';
+    },
+    
+    // Створити реальні краплі дощу
+    createRealRainDrops: function() {
+        this.clearRealRainDrops();
+        
+        for (var i = 0; i < 150; i++) {
+            this.createRealDrop();
         }
     },
     
-    stopRain: function() {
-        this.rainContainer.classList.remove('active');
-        
-        // Видаляємо краплі
-        this.rainDrops.forEach(function(drop) {
-            if (drop.element && drop.element.parentNode) {
-                drop.element.parentNode.removeChild(drop.element);
-            }
-        });
-        this.rainDrops = [];
-    },
-    
-    createRaindrop: function() {
+    createRealDrop: function() {
         var drop = document.createElement('div');
-        drop.className = 'raindrop';
+        drop.className = 'rain-drop-real';
         
         var x = Math.random() * 100;
-        var delay = Math.random() * 2;
-        var duration = 0.5 + Math.random() * 0.5;
+        var delay = Math.random() * 3;
+        var duration = 0.4 + Math.random() * 0.4;
+        var height = 15 + Math.random() * 25;
         
         drop.style.left = x + '%';
+        drop.style.height = height + 'px';
         drop.style.animationDelay = delay + 's';
         drop.style.animationDuration = duration + 's';
         
-        this.rainContainer.appendChild(drop);
-        this.rainDrops.push({ element: drop });
+        this.rainDropsLayer.appendChild(drop);
+        this.rainDrops.push(drop);
+    },
+    
+    clearRealRainDrops: function() {
+        this.rainDrops.forEach(function(drop) {
+            if (drop.parentNode) {
+                drop.parentNode.removeChild(drop);
+            }
+        });
+        this.rainDrops = [];
     },
     
     // ===== ВОГОНЬ =====
@@ -58,7 +90,6 @@ var Effects = {
         
         this.fireContainer.classList.add('active');
         
-        // Створюємо полум'я
         for (var i = 0; i < 30; i++) {
             this.createFireParticle();
         }
@@ -100,7 +131,6 @@ var Effects = {
         
         this.catContainer.classList.add('active');
         
-        // Створюємо пухнасті хвилі
         for (var i = 0; i < 5; i++) {
             this.createCatWave(i);
         }
@@ -132,8 +162,8 @@ var Effects = {
     toggleEffect: function(name, active) {
         switch(name) {
             case 'rain':
-                if (active) this.startRain();
-                else this.stopRain();
+                if (active) this.openRainFullscreen();
+                else this.closeRainFullscreen();
                 break;
             case 'fire':
                 if (active) this.startFire();
@@ -146,9 +176,8 @@ var Effects = {
         }
     },
     
-    // Зупинка всіх ефектів
     stopAll: function() {
-        this.stopRain();
+        this.closeRainFullscreen();
         this.stopFire();
         this.stopCat();
     }
