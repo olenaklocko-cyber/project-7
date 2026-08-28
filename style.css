@@ -829,6 +829,17 @@ body {
     background: rgba(255, 255, 255, 0.25);
 }
 
+.hint-text {
+    font-family: 'Marck Script', cursive;
+    font-size: 24px;
+    color: rgba(45, 90, 90, 0.5);
+    font-style: italic;
+    margin-left: auto;
+    white-space: nowrap;
+    position: absolute;
+    right: 20px;
+}
+
 /* ===== MOBILE ===== */
 @media (max-width: 500px) {
     .sounds-columns {
