@@ -139,9 +139,9 @@ var Sounds = {
         
         var self = this;
         
-        // На мобільних використовуємо OGG
+        // На мобільних використовуємо WAV
         if (this.isMobile) {
-            var audio = new Audio('sounds/whitenoise.ogg');
+            var audio = new Audio('sounds/whitenoise.wav');
             audio.loop = true;
             audio.volume = 0.4;
             
