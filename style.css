@@ -25,14 +25,14 @@ body {
     right: 0;
     bottom: 0;
     background: url('https://images.unsplash.com/photo-1511374302500-1c490827a780?w=600&q=80') center/cover;
-    opacity: 0.55;
+    opacity: 0.85;
     transition: opacity 0.4s ease;
     z-index: 0;
 }
 
 .sound-column[data-sound="rain"]:hover .rain-bg,
 .sound-column[data-sound="rain"].active .rain-bg {
-    opacity: 0.7;
+    opacity: 1;
 }
 
 .sound-column[data-sound="rain"] .sound-content {
@@ -151,14 +151,14 @@ body {
     right: 0;
     bottom: 0;
     background: url('https://images.pexels.com/photos/33790299/pexels-photo-33790299.jpeg?auto=compress&cs=tinysrgb&w=600') center/cover;
-    opacity: 0.6;
+    opacity: 0.85;
     transition: opacity 0.4s ease;
     z-index: 0;
 }
 
 .sound-column[data-sound="fire"]:hover .fire-bg,
 .sound-column[data-sound="fire"].active .fire-bg {
-    opacity: 0.7;
+    opacity: 1;
 }
 
 .sound-column[data-sound="fire"] .sound-content {
@@ -274,14 +274,14 @@ body {
     right: 0;
     bottom: 0;
     background: url('images/cat.jpg') center/cover;
-    opacity: 0.65;
+    opacity: 0.85;
     transition: opacity 0.4s ease;
     z-index: 0;
 }
 
 .sound-column[data-sound="cat"]:hover .cat-bg,
 .sound-column[data-sound="cat"].active .cat-bg {
-    opacity: 0.75;
+    opacity: 1;
 }
 
 .sound-column[data-sound="cat"] .sound-content {
@@ -366,14 +366,14 @@ body {
     right: 0;
     bottom: 0;
     background: url('images/baby.jpg') center/cover;
-    opacity: 0.6;
+    opacity: 0.85;
     transition: opacity 0.4s ease;
     z-index: 0;
 }
 
 .sound-column[data-sound="whitenoise"]:hover .whitenoise-bg,
 .sound-column[data-sound="whitenoise"].active .whitenoise-bg {
-    opacity: 0.75;
+    opacity: 1;
 }
 
 .sound-column[data-sound="whitenoise"] .sound-content {
