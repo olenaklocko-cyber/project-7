@@ -11,10 +11,15 @@ var App = {
     init: function() {
         var self = this;
         
-        document.addEventListener('click', function initAudio() {
+        // Для мобільних — ініціалізуємо при першому дотику
+        var initAudio = function() {
             Sounds.init();
             document.removeEventListener('click', initAudio);
-        }, { once: true });
+            document.removeEventListener('touchstart', initAudio);
+        };
+        
+        document.addEventListener('click', initAudio, { once: true });
+        document.addEventListener('touchstart', initAudio, { once: true });
         
         Effects.init();
         Timer.init();

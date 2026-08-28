@@ -841,50 +841,119 @@ body {
 }
 
 /* ===== MOBILE ===== */
-@media (max-width: 500px) {
+@media (max-width: 600px) {
+    body {
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    
+    #app {
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .app-header {
+        padding: 8px 15px 4px;
+    }
+    
+    .app-title {
+        font-size: 28px;
+    }
+    
     .sounds-columns {
         gap: 6px;
         padding: 6px;
+        min-height: 280px;
     }
     
     .sound-column {
         border-radius: 16px;
+        min-height: 130px;
     }
     
-    .sound-icon {
-        font-size: 40px;
-    }
-    
-    .sound-name {
-        font-size: 12px;
-    }
-    
-    .volume-slider {
-        width: 70px;
+    .timer-overlay {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        z-index: 10;
+        padding: 10px 0;
     }
     
     .timer-square {
-        padding: 35px 50px;
-        border-radius: 24px;
+        padding: 15px 25px;
+        border-radius: 20px;
     }
     
     .timer-time {
-        font-size: 64px;
+        font-size: 50px;
+    }
+    
+    .timer-label {
+        font-size: 14px;
+        margin-top: 8px;
     }
     
     .controls-bottom {
-        padding: 16px;
+        position: relative;
+        bottom: auto;
+        left: auto;
+        right: auto;
+        padding: 10px 12px 25px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(20px);
+    }
+    
+    .timer-presets {
+        gap: 6px;
+    }
+    
+    .preset-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    
+    .timer-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+        position: relative;
     }
     
     .control-btn {
-        padding: 12px 18px;
-        font-size: 13px;
+        padding: 8px 14px;
+        font-size: 16px;
+    }
+    
+    .hint-text {
+        display: block;
+        width: 100%;
+        text-align: center;
+        font-size: 14px;
+        position: static;
+        margin: 8px 0 0;
+        white-space: normal;
+    }
+    
+    .volume-slider {
+        width: 50px;
+    }
+    
+    .sound-column[data-sound="rain"] .volume-slider,
+    .sound-column[data-sound="cat"] .volume-slider {
+        right: -15px;
+    }
+    
+    .sound-column[data-sound="fire"] .volume-slider,
+    .sound-column[data-sound="whitenoise"] .volume-slider {
+        left: -15px;
     }
 }
 
 /* ===== SAFE AREA ===== */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
     .controls-bottom {
-        padding-bottom: calc(20px + env(safe-area-inset-bottom));
+        padding-bottom: calc(25px + env(safe-area-inset-bottom));
     }
 }
