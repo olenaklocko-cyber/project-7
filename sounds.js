@@ -3,6 +3,7 @@
 var Sounds = {
     context: null,
     sounds: {},
+    isMobile: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || ('ontouchstart' in window),
     
     // Ініціалізація
     init: function() {
@@ -14,37 +15,90 @@ var Sounds = {
         }
     },
     
-    // Запуск звуку дощу (Web Audio API)
+    // Запуск звуку дощу
     playRain: function() {
+        if (this.sounds.rain) return;
+        
+        var self = this;
+        
+        // На мобільних використовуємо OGG
+        if (this.isMobile) {
+            var audio = new Audio('sounds/rain.ogg');
+            audio.loop = true;
+            audio.volume = 0.5;
+            
+            audio.play().then(function() {
+                self.sounds.rain = { audio: audio };
+            }).catch(function(e) {
+                console.log('Помилка дощу:', e);
+                self.playRainWebAudio();
+            });
+        } else {
+            this.playRainWebAudio();
+        }
+    },
+    
+    // Web Audio API версія для дощу (для комп'ютерів)
+    playRainWebAudio: function() {
         if (this.sounds.rain) return;
         this.init();
         
-        // Створюємо шумовий буфер
+        var noiseBuffer = this.createNoiseBuffer();
+        var source = this.context.createBufferSource();
+        source.buffer = noiseBuffer;
+        source.loop = true;
+        
+        var lowpass = this.context.createBiquadFilter();
+        lowpass.type = 'lowpass';
+        lowpass.frequency.value = 500;
+        lowpass.Q.value = 0.5;
+        
+        var bandpass = this.context.createBiquadFilter();
+        bandpass.type = 'bandpass';
+        bandpass.frequency.value = 1800;
+        bandpass.Q.value = 0.3;
+        
+        var highshelf = this.context.createBiquadFilter();
+        highshelf.type = 'highshelf';
+        highshelf.frequency.value = 4000;
+        highshelf.gain.value = -12;
+        
+        var lfo = this.context.createOscillator();
+        var lfoGain = this.context.createGain();
+        lfo.frequency.value = 0.15;
+        lfoGain.gain.value = 80;
+        lfo.connect(lfoGain);
+        lfoGain.connect(lowpass.frequency);
+        lfo.start(0);
+        
+        var gainNode = this.context.createGain();
+        gainNode.gain.value = 0.18;
+        
+        source.connect(lowpass);
+        lowpass.connect(bandpass);
+        bandpass.connect(highshelf);
+        highshelf.connect(gainNode);
+        gainNode.connect(this.context.destination);
+        
+        source.start(0);
+        
+        this.sounds.rain = {
+            source: source,
+            gain: gainNode,
+            lfo: lfo,
+            filters: [lowpass, bandpass, highshelf]
+        };
+    },
+    
+    // Створення шумового буферу
+    createNoiseBuffer: function() {
         var bufferSize = 2 * this.context.sampleRate;
         var buffer = this.context.createBuffer(1, bufferSize, this.context.sampleRate);
         var output = buffer.getChannelData(0);
         for (var i = 0; i < bufferSize; i++) {
             output[i] = Math.random() * 2 - 1;
         }
-        
-        var source = this.context.createBufferSource();
-        source.buffer = buffer;
-        source.loop = true;
-        
-        var filter = this.context.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.value = 800;
-        
-        var gain = this.context.createGain();
-        gain.gain.value = 0.25;
-        
-        source.connect(filter);
-        filter.connect(gain);
-        gain.connect(this.context.destination);
-        
-        source.start(0);
-        
-        this.sounds.rain = { source: source, gain: gain };
+        return buffer;
     },
     
     // Запуск звуку вогню (MP3)
@@ -79,37 +133,64 @@ var Sounds = {
         });
     },
     
-    // Запуск білого шуму (Web Audio API)
+    // Запуск білого шуму
     playWhiteNoise: function() {
+        if (this.sounds.whitenoise) return;
+        
+        var self = this;
+        
+        // На мобільних використовуємо OGG
+        if (this.isMobile) {
+            var audio = new Audio('sounds/whitenoise.ogg');
+            audio.loop = true;
+            audio.volume = 0.4;
+            
+            audio.play().then(function() {
+                self.sounds.whitenoise = { audio: audio };
+            }).catch(function(e) {
+                console.log('Помилка білого шуму:', e);
+                self.playWhiteNoiseWebAudio();
+            });
+        } else {
+            this.playWhiteNoiseWebAudio();
+        }
+    },
+    
+    // Web Audio API версія для білого шуму (для комп'ютерів)
+    playWhiteNoiseWebAudio: function() {
         if (this.sounds.whitenoise) return;
         this.init();
         
-        // Створюємо шумовий буфер
-        var bufferSize = 2 * this.context.sampleRate;
-        var buffer = this.context.createBuffer(1, bufferSize, this.context.sampleRate);
-        var output = buffer.getChannelData(0);
-        for (var i = 0; i < bufferSize; i++) {
-            output[i] = Math.random() * 2 - 1;
-        }
-        
+        var noiseBuffer = this.createNoiseBuffer();
         var source = this.context.createBufferSource();
-        source.buffer = buffer;
+        source.buffer = noiseBuffer;
         source.loop = true;
         
-        var filter = this.context.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.value = 3000;
+        var lowpass = this.context.createBiquadFilter();
+        lowpass.type = 'lowpass';
+        lowpass.frequency.value = 2000;
+        lowpass.Q.value = 0.3;
         
-        var gain = this.context.createGain();
-        gain.gain.value = 0.2;
+        var highshelf = this.context.createBiquadFilter();
+        highshelf.type = 'highshelf';
+        highshelf.frequency.value = 3000;
+        highshelf.gain.value = -8;
         
-        source.connect(filter);
-        filter.connect(gain);
-        gain.connect(this.context.destination);
+        var gainNode = this.context.createGain();
+        gainNode.gain.value = 0.15;
+        
+        source.connect(lowpass);
+        lowpass.connect(highshelf);
+        highshelf.connect(gainNode);
+        gainNode.connect(this.context.destination);
         
         source.start(0);
         
-        this.sounds.whitenoise = { source: source, gain: gain };
+        this.sounds.whitenoise = {
+            source: source,
+            gain: gainNode,
+            filters: [lowpass, highshelf]
+        };
     },
     
     // Зупинка звуку
@@ -125,6 +206,20 @@ var Sounds = {
         
         if (sound.source) {
             try { sound.source.stop(); } catch(e) {}
+        }
+        
+        if (sound.oscillators) {
+            sound.oscillators.forEach(function(osc) {
+                try { osc.stop(); } catch(e) {}
+            });
+        }
+        
+        if (sound.lfo) {
+            if (Array.isArray(sound.lfo)) {
+                sound.lfo.forEach(function(l) { try { l.stop(); } catch(e) {} });
+            } else {
+                try { sound.lfo.stop(); } catch(e) {}
+            }
         }
         
         delete this.sounds[name];
